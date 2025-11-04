@@ -1,0 +1,59 @@
+<?php
+use  Illuminate\Support\Str;
+?>
+@extends('layouts.panel')
+
+@section('content')
+
+
+    
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Nuevo Usuario</h3>
+            </div>
+            <div class="col text-right">
+              <a href="{{url('/users')}}" class="btn btn-sm btn-success">
+                <i class="fas fa-chevron-left"></i>
+                Regresar</a>
+            </div>
+          </div>
+        </div>
+     <div class="card-body">
+
+      @if($errors->any())
+        @foreach($errors->all() as $error)
+          <div class="alert alert-danger" role="alert">
+            <strong>Por favor!</strong> {{$error}}
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+      
+        @endforeach
+      @endif
+      <form action="{{url('/users')}}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="name">Nombre del usuarios</label>
+            <input type="text" name="name" class="form-control" value="{{old('name')}}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Correo electronico</label>
+            <input type="text" name="email" class="form-control" value="{{old('email')}}" >
+        </div>
+        <div class="form-group">
+          <label for="rol">rol</label>
+          <input type="text" name="rol" class="form-control" value="{{old('rol')}}" required >
+      </div>
+        <div class="form-group">
+          <label for="password">contraseña</label>
+          <input type="text" name="password" class="form-control" value="{{old('password',Str::random(8))}}" >
+      </div>
+        <button type="submit" class="btn btn-sm btn-primary">Crear Usuario</button>
+    </form>
+     </div>
+      </div>
+
+ 
+
+@endsection

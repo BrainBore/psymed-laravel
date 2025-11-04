@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PDF</title>
+</head>
+<body>
+    <h1>Usarios</h1>
+    <table class="table align-items-center table-flush">
+        <thead class="thead-light">
+          <tr>
+            
+            <th scope="col">Nombre</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Incorporado</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($user as $user)
+          
+          <tr>
+            
+            <td>
+              {{$user->name}}
+            </td>
+            <td>
+                {{$user->email}}
+            </td>
+            <td>
+              {{$user->created_at->diffForHumans()}}
+          </td>
+            
+            
+          </tr>
+          
+          @endforeach
+        </tbody>
+      </table>
+</body>
+</html>
