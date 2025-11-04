@@ -1,28 +1,35 @@
-# Imagen base de PHP con Apache
-FROM php:8.1-apache
+# Usa PHP 8.2 CLI como base
+FROM php:8.2-cli
 
-# Instala dependencias del sistema y extensiones necesarias para Laravel
+# Instala dependencias necesarias para Laravel
 RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libonig-dev libxml2-dev zip curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    mariadb-client \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configura el directorio de trabajo
-WORKDIR /var/www/html
+# Define directorio de trabajo
+WORKDIR /app
 
-# Copia todo el contenido del proyecto al contenedor
-COPY . .
+# Copia todos los archivos al contenedor
+COPY . /app
 
-# Instala dependencias de Laravel
-RUN composer install --no-dev --optimize-autoloader
+# Da permisos correctos a storage y bootstrap/cache
+RUN chown -R www-data:www-data /app \
+    && chmod -R 755 /app/storage \
+    && chmod -R 755 /app/bootstrap/cache
 
-# Da permisos a las carpetas de almacenamiento
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Expone el puerto que Render asignará
+EXPOSE 10000
 
-# Expone el puerto 80
-EXPOSE 80
+# Ejecuta Laravel con servidor interno apuntando a cualquier host
+CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
 
-# Comando para iniciar Apache
-CMD ["apache2-foreground"]
